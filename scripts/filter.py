@@ -1,30 +1,34 @@
 import csv
 
-# Đặt giá trị ngưỡng cho "delegated dym" (có thể thay đổi)
-threshold = 100
+# Set the voting power threshold (can be modified as needed)
+voting_power = 100
 
-# Đọc file CSV, lọc các dòng có giá trị "delegated dym" nhỏ hơn threshold, và ghi vào file mới
-def filter_and_save_delegated_dym(input_file_path, output_file_path, threshold):
+# Function to filter rows with "delegated dym" less than voting_power and save them to a new CSV file
+def filter_and_save_delegated_dym(input_file_path, output_file_path, voting_power):
+    # Open the input CSV file for reading
     with open(input_file_path, mode='r') as csvfile:
         csvreader = csv.DictReader(csvfile)
         
-        # Mở file để ghi các dòng thỏa mãn điều kiện
+        # Open the output CSV file for writing filtered data
         with open(output_file_path, mode='w', newline='') as csvoutfile:
-            fieldnames = csvreader.fieldnames  # Lấy tên các cột từ file gốc
+            fieldnames = csvreader.fieldnames  # Get the field names (header) from the input file
             csvwriter = csv.DictWriter(csvoutfile, fieldnames=fieldnames)
             
-            # Ghi tiêu đề (header) vào file mới
+            # Write the header (column names) to the new CSV file
             csvwriter.writeheader()
             
-            # Lọc các dòng và ghi những dòng đạt điều kiện vào file mới
+            # Iterate over each row in the input CSV file
             for row in csvreader:
+                # Convert the "delegated dym" value to a float for comparison
                 delegated_dym = float(row['delegated dym'])
-                if delegated_dym < threshold:
+                
+                # If "delegated dym" is less than the voting power threshold, write the row to the new file
+                if delegated_dym < voting_power:
                     csvwriter.writerow(row)
 
-# Đường dẫn đến file CSV gốc và file CSV đầu ra
+# Input CSV file path and output CSV file path
 input_file_path = 'delegators.csv'
 output_file_path = 'filtered_delegators.csv'
 
-# Gọi hàm để lọc và ghi kết quả vào file mới
-filter_and_save_delegated_dym(input_file_path, output_file_path, threshold)
+# Call the function to filter rows and save them to the new CSV file
+filter_and_save_delegated_dym(input_file_path, output_file_path, voting_power)
